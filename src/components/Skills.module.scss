@@ -1,0 +1,157 @@
+.skillsSection {
+    background: var(--bg-dark);
+}
+
+.container {
+    max-width: 800px;
+}
+
+.title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 2rem;
+    }
+}
+
+.categoriesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.categoryWrapper {
+    margin-bottom: 0.5rem;
+}
+
+.categoryButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &.active {
+        background: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
+}
+
+.categoryHeader {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.categoryIcon {
+    font-size: 2rem;
+    color: var(--primary);
+
+    &.active {
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+    }
+}
+
+.categoryInfo {
+    text-align: left;
+}
+
+.categoryTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+    }
+}
+
+.categorySubtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+
+    &.active {
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+.chevron {
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+
+    &.rotated {
+        transform: rotate(180deg);
+    }
+}
+
+.expandedContent {
+    overflow: hidden;
+}
+
+.skillsGrid {
+    padding: 2rem;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 0 0 15px 15px;
+    margin-top: -5px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: none;
+
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+}
+
+.skillItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skillHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.skillName {
+    font-weight: 500;
+}
+
+.progressBar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--secondary);
+}

@@ -1,0 +1,70 @@
+.whatsappButton {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+
+    @media (max-width: 768px) {
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+.tooltip {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 0.8rem 1.5rem;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    margin-right: -15px;
+    white-space: nowrap;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: none;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    font-weight: bold;
+    color: white;
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+}
+
+.iconContainer {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
+    }
+
+    &:active {
+        transform: scale(0.9);
+    }
+
+    @media (max-width: 768px) {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+.icon {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
