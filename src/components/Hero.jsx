@@ -12,7 +12,7 @@ const Hero = () => {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const tiltX = ((y - centerY) / centerY) * -10; // Inverted for natural feel
+    const tiltX = ((y - centerY) / centerY) * -10;
     const tiltY = ((x - centerX) / centerX) * 10;
 
     setTilt({ x: tiltX, y: tiltY });
