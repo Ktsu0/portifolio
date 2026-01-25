@@ -30,55 +30,76 @@ const Contact = () => {
     setShowModal(true);
   };
 
-  const handleFinalSend = async () => {
-    if (selectedOption === "email") {
-      // Se não configurou EmailJS ainda, usa mailto direto (mais confiável para o usuário agora)
-      const isConfigured = "service_id" !== "service_id"; // Lógica interna apenas
+  const closeAndReset = () => {
+    setShowModal(false);
+    setName("");
+    setMessage("");
+    setIsSending(false);
+  };
 
+  const handleFinalSend = async () => {
+    if (!name || !message) return;
+
+    if (selectedOption === "email") {
+      const EMAIL_CONFIG = {
+        serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+      };
+
+      const isConfigured =
+        EMAIL_CONFIG.serviceId &&
+        EMAIL_CONFIG.templateId &&
+        EMAIL_CONFIG.publicKey;
+
+      // ===== ENVIO REAL VIA EMAILJS =====
       if (isConfigured) {
         setIsSending(true);
-        try {
-          const templateParams = {
-            from_name: name,
-            message: message,
-            to_email: "gabrielwag971@gmail.com",
-          };
 
+        try {
           await emailjs.send(
-            "service_id",
-            "template_id",
-            templateParams,
-            "public_key",
+            EMAIL_CONFIG.serviceId,
+            EMAIL_CONFIG.templateId,
+            {
+              from_name: name,
+              message,
+              reply_to: "gabrielwag971@gmail.com",
+            },
+            EMAIL_CONFIG.publicKey,
           );
+
           alert("Mensagem enviada com sucesso!");
-          setShowModal(false);
-          setName("");
-          setMessage("");
-          setIsSending(false);
+          closeAndReset();
           return;
-        } catch (error) {
-          console.error("Erro no EmailJS:", error);
+        } catch (err) {
+          console.warn("EmailJS falhou, usando mailto fallback", err);
+        } finally {
+          setIsSending(false);
         }
       }
 
-      // Fallback robusto: Abre o email de forma profissional
+      // ===== FALLBACK MAILTO LIMPO =====
       const subject = encodeURIComponent(`Contato Profissional - ${name}`);
-      // Usando %0D%0A para quebras de linha (padrão RFC)
       const body = encodeURIComponent(
-        `Olá Gabriel,%0D%0A%0D%0AMe chamo ${name}.%0D%0A%0D%0A${message}%0D%0A%0D%0AAtenciosamente,%0D%0A${name}`,
+        `Olá Gabriel,
+
+Me chamo ${name}.
+
+${message}
+
+Atenciosamente,
+${name}`,
       );
-      const mailtoUrl = `mailto:gabrielwag971@gmail.com?subject=${subject}&body=${body}`;
 
-      // Tenta abrir o email sem disparar o bloqueador de popup
-      window.location.assign(mailtoUrl);
+      window.location.assign(
+        `mailto:gabrielwag971@gmail.com?subject=${subject}&body=${body}`,
+      );
 
-      setShowModal(false);
-      setIsSending(false);
-      setName("");
-      setMessage("");
+      closeAndReset();
       return;
     }
 
+    // ===== OUTROS CANAIS =====
     const encodedMessage = encodeURIComponent(`Olá, sou ${name}. ${message}`);
     let targetUrl = null;
 
@@ -93,15 +114,11 @@ const Contact = () => {
         targetUrl = "https://discord.com/users/555803479675895838";
         break;
       default:
-        break;
+        return;
     }
 
-    if (targetUrl) {
-      window.open(targetUrl, "_blank", "noopener,noreferrer");
-      setShowModal(false);
-      setName("");
-      setMessage("");
-    }
+    window.open(targetUrl, "_blank", "noopener,noreferrer");
+    closeAndReset();
   };
 
   return (
