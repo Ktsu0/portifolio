@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaGithub, FaLinkedin, FaBars, FaTimes } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { IoMenu, IoClose } from "react-icons/io5";
 import TypingEffect from "./TypingEffect";
 import styles from "./Navbar.module.scss";
 
@@ -71,7 +72,7 @@ const Navbar = () => {
             </>
           ) : (
             <button onClick={toggleMenu} className={styles.mobileToggle}>
-              {isOpen ? <FaTimes /> : <FaBars />}
+              {isOpen ? <IoClose /> : <IoMenu />}
             </button>
           )}
         </div>
