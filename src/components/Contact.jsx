@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import emailjs from "@emailjs/browser";
 import {
   FaWhatsapp,
   FaInstagram,
   FaEnvelope,
   FaDiscord,
   FaRegPaperPlane,
-} from "react-icons/fa";
+  FaGoogle,
+} from "react-icons/fa"; // Adicionei o ícone do Google se quiser ser mais específico
 import styles from "./Contact.module.scss";
 
 const Contact = () => {
@@ -15,12 +15,13 @@ const Contact = () => {
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("whatsapp");
-  const [isSending, setIsSending] = useState(false);
+
+  const MY_EMAIL = "gabrielwag971@gmail.com";
 
   const contactOptions = [
     { id: "whatsapp", label: "WhatsApp", icon: <FaWhatsapp /> },
     { id: "instagram", label: "Instagram", icon: <FaInstagram /> },
-    { id: "email", label: "Email", icon: <FaEnvelope /> },
+    { id: "email", label: "Gmail / Email", icon: <FaEnvelope /> }, // Rótulo genérico
     { id: "discord", label: "Discord", icon: <FaDiscord /> },
   ];
 
@@ -34,91 +35,59 @@ const Contact = () => {
     setShowModal(false);
     setName("");
     setMessage("");
-    setIsSending(false);
   };
 
-  const handleFinalSend = async () => {
+  // Função para detectar se é dispositivo móvel (opcional, para decidir entre app ou web)
+  const isMobile = () => {
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  };
+
+  const handleFinalSend = () => {
     if (!name || !message) return;
 
-    if (selectedOption === "email") {
-      const EMAIL_CONFIG = {
-        serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        templateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-        publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-      };
+    // Prepara os textos seguros para URL
+    const subject = encodeURIComponent(`Contato Profissional - ${name}`);
+    const bodyContent = `Olá Gabriel,\n\nMe chamo ${name}.\n\n${message}\n\nAtenciosamente,\n${name}`;
+    const encodedBody = encodeURIComponent(bodyContent);
 
-      const isConfigured =
-        EMAIL_CONFIG.serviceId &&
-        EMAIL_CONFIG.templateId &&
-        EMAIL_CONFIG.publicKey;
-
-      // ===== ENVIO REAL VIA EMAILJS =====
-      if (isConfigured) {
-        setIsSending(true);
-
-        try {
-          await emailjs.send(
-            EMAIL_CONFIG.serviceId,
-            EMAIL_CONFIG.templateId,
-            {
-              from_name: name,
-              message,
-              reply_to: "gabrielwag971@gmail.com",
-            },
-            EMAIL_CONFIG.publicKey,
-          );
-
-          alert("Mensagem enviada com sucesso!");
-          closeAndReset();
-          return;
-        } catch (err) {
-          console.warn("EmailJS falhou, usando mailto fallback", err);
-        } finally {
-          setIsSending(false);
-        }
-      }
-
-      // ===== FALLBACK MAILTO LIMPO =====
-      const subject = encodeURIComponent(`Contato Profissional - ${name}`);
-      const body = encodeURIComponent(
-        `Olá Gabriel,
-
-Me chamo ${name}.
-
-${message}
-
-Atenciosamente,
-${name}`,
-      );
-
-      window.location.assign(
-        `mailto:gabrielwag971@gmail.com?subject=${subject}&body=${body}`,
-      );
-
-      closeAndReset();
-      return;
-    }
-
-    // ===== OUTROS CANAIS =====
-    const encodedMessage = encodeURIComponent(`Olá, sou ${name}. ${message}`);
-    let targetUrl = null;
+    let targetUrl = "";
 
     switch (selectedOption) {
-      case "whatsapp":
-        targetUrl = `https://wa.me/5546991213122?text=${encodedMessage}`;
+      case "email":
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${MY_EMAIL}&su=${subject}&body=${encodedBody}`;
+        const mailtoUrl = `mailto:${MY_EMAIL}?subject=${subject}&body=${encodedBody}`;
+
+        if (isMobile()) {
+          window.location.href = mailtoUrl;
+          closeAndReset();
+          return;
+        } else {
+          targetUrl = gmailUrl;
+        }
         break;
+
+      case "whatsapp":
+        const whatsMsg = encodeURIComponent(`Olá, sou ${name}. ${message}`);
+        targetUrl = `https://wa.me/5546991213122?text=${whatsMsg}`;
+        break;
+
       case "instagram":
         targetUrl = "https://instagram.com/gabr1el_wag";
         break;
+
       case "discord":
         targetUrl = "https://discord.com/users/555803479675895838";
         break;
+
       default:
         return;
     }
 
-    window.open(targetUrl, "_blank", "noopener,noreferrer");
-    closeAndReset();
+    // Abre em nova aba
+    if (targetUrl) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+      closeAndReset();
+    }
   };
 
   return (
@@ -213,14 +182,16 @@ ${name}`,
 
                 <h3 className={styles.modalTitle}>Escolha o canal</h3>
                 <p className={styles.modalDescription}>
-                  Por onde você prefere enviar essa mensagem?
+                  Por onde enviamos essa mensagem?
                 </p>
 
                 <div className={styles.optionsList}>
                   {contactOptions.map((option) => (
                     <label
                       key={option.id}
-                      className={`${styles.optionItem} ${selectedOption === option.id ? styles.selected : ""}`}
+                      className={`${styles.optionItem} ${
+                        selectedOption === option.id ? styles.selected : ""
+                      }`}
                     >
                       <input
                         type="radio"
@@ -243,11 +214,12 @@ ${name}`,
                 </div>
 
                 <button
-                  className={`${styles.confirmButton} ${isSending ? styles.loading : ""}`}
+                  className={styles.confirmButton}
                   onClick={handleFinalSend}
-                  disabled={isSending}
                 >
-                  {isSending ? "Enviando..." : "Enviar Agora"}
+                  {selectedOption === "email" && !isMobile()
+                    ? "Abrir no Gmail"
+                    : "Enviar Agora"}
                 </button>
               </motion.div>
             </motion.div>

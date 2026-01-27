@@ -6,6 +6,8 @@ import styles from "./Projects.module.scss";
 const projects = [
   {
     title: "Financeiro — Dashboard de Gestão Financeira",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
     description:
       "Aplicação full-stack para gestão financeira pessoal, projetada para registrar e organizar receitas, despesas e obrigações financeiras, incluindo controle de cartões de crédito. A plataforma oferece dashboards interativos para análise visual de dados, exportação estruturada em CSV, PDF e JSON, além de sincronização automática com Google Sheets, garantindo persistência, rastreabilidade e portabilidade das informações.",
     tech: [
@@ -20,6 +22,8 @@ const projects = [
   },
   {
     title: "Termo Infinito — Modo Ilimitado",
+    image:
+      "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=2071&auto=format&fit=crop",
     description:
       "Jogo web de adivinhação de palavras inspirado em Wordle, desenvolvido para oferecer partidas ilimitadas com feedback visual por letra em tempo real e validação de vocabulário por meio de integração com API de dicionário. A aplicação apresenta interface leve, responsiva e otimizada para desempenho, com deploy contínuo em Vercel para entrega rápida e estável.",
     tech: [
@@ -34,6 +38,8 @@ const projects = [
   },
   {
     title: "Mystic — Plataforma Interativa de Agendamentos e Serviços",
+    image:
+      "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=1974&auto=format&fit=crop",
     description:
       "Aplicação web desenvolvida com React e Vite para apresentação e agendamento de serviços, estruturada como uma SPA com navegação fluida e modular. O sistema inclui calendário interativo para marcação de consultas, seções institucionais e área de feedback de usuários, além de integrações diretas com Instagram e WhatsApp. A interface é enriquecida com animações, efeitos de partículas e elementos 3D para proporcionar uma experiência visual imersiva e responsiva.",
     tech: [
@@ -49,7 +55,9 @@ const projects = [
     external: "#",
   },
   {
-    title: "RPG — The Lost World (Console Adventure)",
+    title: "RPG — The Lost World",
+    image:
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop",
     description:
       "RPG de aventura baseado em texto, executado em ambiente de console, com sistemas estruturados de combate, exploração e progressão de personagem, além de narrativas interativas orientadas por estado. O projeto encontra-se em evolução para uma interface visual, com foco em migração da lógica central para uma camada gráfica desacoplada.",
     tech: [
@@ -60,13 +68,6 @@ const projects = [
       "Planned UI Enhancements (Canvas / Web UI / Game Library)",
     ],
     github: "https://github.com/Ktsu0/RPG---THE-LOST-WORLD",
-    external: "#",
-  },
-  {
-    title: "Projeto Exemplo 3",
-    description: "Design system criado do zero para escalar aplicações.",
-    tech: ["TypeScript", "CSS Modules"],
-    github: "#",
     external: "#",
   },
 ];
@@ -132,19 +133,13 @@ const Projects = () => {
             >
               <div className={styles.cardHeader}>
                 <h3 className={styles.projectTitle}>{project.title}</h3>
-
-                <ul className={styles.techList}>
-                  {project.tech.slice(0, 3).map((t, i) => (
-                    <li key={i} className={styles.techTag}>
-                      {t}
-                    </li>
-                  ))}
-                  {project.tech.length > 3 && (
-                    <li className={styles.techTag}>
-                      +{project.tech.length - 3}
-                    </li>
-                  )}
-                </ul>
+                <div className={styles.projectImageContainer}>
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className={styles.projectImage}
+                  />
+                </div>
               </div>
 
               <div className={styles.cardFooter}>
@@ -202,68 +197,68 @@ const Projects = () => {
                 className={`${styles.modalContent} ${styles.detailsModal}`}
                 onClick={(e) => e.stopPropagation()}
               >
-                <button
-                  className={styles.closeButton}
-                  onClick={handleDetailsClose}
-                  aria-label="Fechar"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                <div className={styles.modalImageWrapper}>
+                  <img
+                    src={selectedProject.image}
+                    alt={selectedProject.title}
+                    className={styles.modalFullImage}
+                  />
+                  <div className={styles.imageGradient}></div>
+                  <button
+                    className={styles.closeButton}
+                    onClick={handleDetailsClose}
+                    aria-label="Fechar"
                   >
-                    <path
-                      d="M18 6L6 18M6 6L18 18"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-
-                <h3 className={styles.detailsTitle}>{selectedProject.title}</h3>
-
-                <div className={styles.detailsBody}>
-                  <p className={styles.detailsDescription}>
-                    {selectedProject.description}
-                  </p>
-
-                  <div className={styles.detailsTechSection}>
-                    <h4>Tecnologias Utilizadas:</h4>
-                    <ul className={styles.techListFull}>
-                      {selectedProject.tech.map((t, i) => (
-                        <li key={i} className={styles.techTagFull}>
-                          {t}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    <FaTimes />
+                  </button>
                 </div>
 
-                <div className={styles.detailsActions}>
-                  <a
-                    href={selectedProject.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.actionButton}
-                  >
-                    <FaGithub /> Ver Código
-                  </a>
-                  <a
-                    href={selectedProject.external}
-                    onClick={(e) => {
-                      handleDetailsClose();
-                      handleProjectClick(e, selectedProject.external);
-                    }}
-                    target={
-                      selectedProject.external !== "#" ? "_blank" : "_self"
-                    }
-                    rel="noopener noreferrer"
-                    className={`${styles.actionButton} ${styles.primaryAction}`}
-                  >
-                    <FaExternalLinkAlt /> Ver Projeto
-                  </a>
+                <div className={styles.detailsContentWrapper}>
+                  <h3 className={styles.detailsTitle}>
+                    {selectedProject.title}
+                  </h3>
+
+                  <div className={styles.detailsBody}>
+                    <p className={styles.detailsDescription}>
+                      {selectedProject.description}
+                    </p>
+
+                    <div className={styles.detailsTechSection}>
+                      <h4>Tecnologias Utilizadas:</h4>
+                      <ul className={styles.techListFull}>
+                        {selectedProject.tech.map((t, i) => (
+                          <li key={i} className={styles.techTagFull}>
+                            {t}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className={styles.detailsActions}>
+                    <a
+                      href={selectedProject.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.actionButton}
+                    >
+                      <FaGithub /> Ver Código
+                    </a>
+                    <a
+                      href={selectedProject.external}
+                      onClick={(e) => {
+                        handleDetailsClose();
+                        handleProjectClick(e, selectedProject.external);
+                      }}
+                      target={
+                        selectedProject.external !== "#" ? "_blank" : "_self"
+                      }
+                      rel="noopener noreferrer"
+                      className={`${styles.actionButton} ${styles.primaryAction}`}
+                    >
+                      <FaExternalLinkAlt /> Ver Projeto
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
