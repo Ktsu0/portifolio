@@ -3,160 +3,211 @@ import React, { useState, useEffect } from "react";
 const TypingEffect = () => {
   const [text, setText] = useState("");
 
-  // Use a ref to keep track of the current state without triggering re-renders for logic
-  // This helps avoid race conditions in the timeout loop
   const stateRef = React.useRef({
-    phase: 0, // 0: type mistake, 1: delete mistake, 2: type correct, 3: wait, 4: delete all
+    phraseIndex: 0,
+    isDeleting: false,
     textLength: 0,
   });
 
   useEffect(() => {
     let timeoutId;
 
-    // Constants
-    const TYPING_SPEED = 150;
-    const DELETING_SPEED = 100;
-    const PAUSE_SHORT = 800;
-    const PAUSE_LONG = 4000;
+    const TYPING_SPEED = 100;
+    const DELETING_SPEED = 75;
+    const PAUSE_AFTER_TYPING = 2000;
+    const PAUSE_AFTER_DELETING = 500;
 
-    const WORD_MISTAKE = 'const role = "Prograa";';
-    const WORD_STEM = 'const role = "Progra';
-    const WORD_FINAL = 'const role = "Programador";';
+    const phrases = [
+      'console.log("Hello World!");',
+      'console.log("Welcome");',
+      'const role = "Programador";',
+    ];
 
     const loop = () => {
       const state = stateRef.current;
+      const currentPhrase = phrases[state.phraseIndex];
 
       let nextDelay = TYPING_SPEED;
 
-      if (state.phase === 0) {
-        // Typing "...Prograa..."
-        if (state.textLength < WORD_MISTAKE.length) {
+      if (!state.isDeleting) {
+        if (state.textLength < currentPhrase.length) {
           state.textLength++;
-          setText(WORD_MISTAKE.substring(0, state.textLength));
+          setText(currentPhrase.substring(0, state.textLength));
+          nextDelay = TYPING_SPEED;
         } else {
-          state.phase = 1;
-          nextDelay = PAUSE_SHORT;
+          state.isDeleting = true;
+          nextDelay = PAUSE_AFTER_TYPING;
         }
-      } else if (state.phase === 1) {
-        // Deleting
-        if (state.textLength > WORD_STEM.length) {
-          state.textLength--;
-          setText(WORD_MISTAKE.substring(0, state.textLength));
-          nextDelay = DELETING_SPEED;
-        } else {
-          state.phase = 2;
-        }
-      } else if (state.phase === 2) {
-        // Typing Correct
-        if (state.textLength < WORD_FINAL.length) {
-          state.textLength++;
-          setText(WORD_FINAL.substring(0, state.textLength));
-        } else {
-          state.phase = 3;
-          nextDelay = PAUSE_LONG;
-        }
-      } else if (state.phase === 3) {
-        state.phase = 4;
-        nextDelay = DELETING_SPEED;
-      } else if (state.phase === 4) {
+      } else {
         if (state.textLength > 0) {
           state.textLength--;
-          setText(WORD_FINAL.substring(0, state.textLength));
+          setText(currentPhrase.substring(0, state.textLength));
           nextDelay = DELETING_SPEED;
         } else {
-          state.phase = 0;
-          nextDelay = 500;
+          state.isDeleting = false;
+          state.phraseIndex = (state.phraseIndex + 1) % phrases.length;
+          nextDelay = PAUSE_AFTER_DELETING;
         }
       }
 
       timeoutId = setTimeout(loop, nextDelay);
     };
 
-    // Start the loop
     timeoutId = setTimeout(loop, 500);
 
     return () => clearTimeout(timeoutId);
   }, []);
 
-  // Simple syntax highlighter for the specific phrase
   const renderHighlightedText = (currentText) => {
-    // We expect text to start with "const job = ..."
-    // We can define spans for known parts
     const parts = [];
     let remaining = currentText;
 
-    // Keyword "const"
-    if (remaining.startsWith("const")) {
+    if (remaining.startsWith("console")) {
+      const consoleMatch = remaining.match(/^(console)/);
+      if (consoleMatch) {
+        parts.push(
+          <span key="console" style={{ color: "#61afef" }}>
+            {consoleMatch[1]}
+          </span>,
+        );
+        remaining = remaining.substring(consoleMatch[1].length);
+      }
+
+      if (remaining.startsWith(".")) {
+        parts.push(
+          <span key="dot1" style={{ color: "#abb2bf" }}>
+            .
+          </span>,
+        );
+        remaining = remaining.substring(1);
+      }
+
+      if (remaining.startsWith("log")) {
+        const logMatch = remaining.match(/^(log)/);
+        if (logMatch) {
+          parts.push(
+            <span key="log" style={{ color: "#61afef" }}>
+              {logMatch[1]}
+            </span>,
+          );
+          remaining = remaining.substring(logMatch[1].length);
+        }
+      }
+
+      if (remaining.startsWith("(")) {
+        parts.push(
+          <span key="paren1" style={{ color: "#abb2bf" }}>
+            (
+          </span>,
+        );
+        remaining = remaining.substring(1);
+      }
+
+      const stringMatch = remaining.match(/^("[^"]*"?)/);
+      if (stringMatch) {
+        parts.push(
+          <span key="string" style={{ color: "#98c379" }}>
+            {stringMatch[1]}
+          </span>,
+        );
+        remaining = remaining.substring(stringMatch[1].length);
+      }
+
+      if (remaining.startsWith(")")) {
+        parts.push(
+          <span key="paren2" style={{ color: "#abb2bf" }}>
+            )
+          </span>,
+        );
+        remaining = remaining.substring(1);
+      }
+
+      if (remaining.startsWith(";")) {
+        parts.push(
+          <span key="semi" style={{ color: "#abb2bf" }}>
+            ;
+          </span>,
+        );
+        remaining = remaining.substring(1);
+      }
+    } else if (remaining.startsWith("const")) {
       const len = Math.min(5, remaining.length);
       parts.push(
         <span key="const" style={{ color: "#c678dd" }}>
           {remaining.substring(0, len)}
-        </span>
+        </span>,
       );
       remaining = remaining.substring(len);
-    }
 
-    // Space after const
-    if (remaining.startsWith(" ")) {
-      parts.push(<span key="sp1"> </span>);
-      remaining = remaining.substring(1);
-    }
-
-    // Variable "job" (blue)
-    if (
-      remaining.length > 0 &&
-      !remaining.startsWith("=") &&
-      !remaining.startsWith('"')
-    ) {
-      // "job" is 3 chars.
-      // Logic: grab until space or =
-      const match = remaining.match(/^([a-z]+)/); // simplistic
-      if (match) {
-        parts.push(
-          <span key="var" style={{ color: "#61afef" }}>
-            {match[1]}
-          </span>
-        );
-        remaining = remaining.substring(match[1].length);
+      if (remaining.startsWith(" ")) {
+        parts.push(<span key="sp1"> </span>);
+        remaining = remaining.substring(1);
       }
-    }
 
-    // Space and equals
-    if (remaining.startsWith(" = ")) {
-      parts.push(
-        <span key="eq" style={{ color: "#56b6c2" }}>
-          {" "}
-          ={" "}
-        </span>
-      );
-      remaining = remaining.substring(3);
-    } else if (remaining.startsWith(" =")) {
-      parts.push(
-        <span key="eq-partial" style={{ color: "#56b6c2" }}>
-          {" "}
-          =
-        </span>
-      );
-      remaining = remaining.substring(2);
-    } else if (remaining.startsWith(" ")) {
-      parts.push(<span key="sp2"> </span>);
-      remaining = remaining.substring(1);
-      if (remaining.startsWith("=")) {
+      const varMatch = remaining.match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
+      if (varMatch) {
         parts.push(
-          <span key="eq-only" style={{ color: "#56b6c2" }}>
+          <span key="var" style={{ color: "#e06c75" }}>
+            {varMatch[1]}
+          </span>,
+        );
+        remaining = remaining.substring(varMatch[1].length);
+      }
+
+      if (remaining.startsWith(" = ")) {
+        parts.push(
+          <span key="eq" style={{ color: "#56b6c2" }}>
+            {" "}
+            ={" "}
+          </span>,
+        );
+        remaining = remaining.substring(3);
+      } else if (remaining.startsWith(" =")) {
+        parts.push(
+          <span key="eq-partial" style={{ color: "#56b6c2" }}>
+            {" "}
             =
-          </span>
+          </span>,
+        );
+        remaining = remaining.substring(2);
+      } else if (remaining.startsWith(" ")) {
+        parts.push(<span key="sp2"> </span>);
+        remaining = remaining.substring(1);
+        if (remaining.startsWith("=")) {
+          parts.push(
+            <span key="eq-only" style={{ color: "#56b6c2" }}>
+              =
+            </span>,
+          );
+          remaining = remaining.substring(1);
+        }
+      }
+
+      const stringMatch = remaining.match(/^("[^"]*"?)/);
+      if (stringMatch) {
+        parts.push(
+          <span key="string" style={{ color: "#98c379" }}>
+            {stringMatch[1]}
+          </span>,
+        );
+        remaining = remaining.substring(stringMatch[1].length);
+      }
+
+      if (remaining.startsWith(";")) {
+        parts.push(
+          <span key="semi" style={{ color: "#abb2bf" }}>
+            ;
+          </span>,
         );
         remaining = remaining.substring(1);
       }
     }
 
-    // String (green)
     if (remaining.length > 0) {
       parts.push(
-        <span key="string" style={{ color: "#98c379" }}>
+        <span key="remaining" style={{ color: "#abb2bf" }}>
           {remaining}
-        </span>
+        </span>,
       );
     }
 

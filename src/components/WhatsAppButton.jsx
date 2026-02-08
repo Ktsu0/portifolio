@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
-import styles from './WhatsAppButton.module.scss';
+import React, { useState } from "react";
+import { FaPhoneAlt } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import styles from "./WhatsAppButton.module.scss";
 
 const WhatsAppButton = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -17,7 +17,7 @@ const WhatsAppButton = () => {
         {isHovered && (
           <motion.div
             initial={{ opacity: 0, x: 20, width: 0 }}
-            animate={{ opacity: 1, x: 0, width: 'auto' }}
+            animate={{ opacity: 1, x: 0, width: "auto" }}
             exit={{ opacity: 0, x: 20, width: 0 }}
             className={styles.tooltip}
           >
@@ -27,11 +27,14 @@ const WhatsAppButton = () => {
       </AnimatePresence>
 
       <motion.div
-        whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)' }}
+        whileHover={{
+          scale: 1.1,
+          boxShadow: "0 0 20px rgba(59, 130, 246, 0.8)",
+        }}
         whileTap={{ scale: 0.9 }}
         className={styles.iconContainer}
       >
-        <FaWhatsapp className={styles.icon} />
+        <FaPhoneAlt className={styles.icon} />
       </motion.div>
     </a>
   );

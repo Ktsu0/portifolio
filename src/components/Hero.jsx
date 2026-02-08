@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import styles from "./Hero.module.scss";
+import fotoPerfil from "./../assets/fotoPerfil.png";
 
 const Hero = () => {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -27,41 +28,63 @@ const Hero = () => {
       <div className={styles.container}>
         <div className={styles.textContent}>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className={styles.greeting}
           >
             Olá, eu sou
           </motion.p>
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
             className={styles.name}
           >
             Gabriel Wagner
           </motion.h1>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
-            className={`gradient-text ${styles.title}`}
+            className={styles.title}
           >
             Desenvolvedor
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.5 }}
             className={styles.description}
           >
-            Transformo ideias em experiências digitais imersivas, funcionais e
-            bem estruturadas. Sou especializado em criar soluções modernas,
-            unindo design elegante, boa usabilidade e desempenho sólido, sempre
-            com foco em qualidade, escalabilidade e boas práticas de
-            desenvolvimento.
+            Sou estudante do SENAC, atualmente cursando Técnico em Informática
+            para Internet, com foco no desenvolvimento de soluções digitais
+            modernas e bem estruturadas. Transformo ideias em experiências
+            digitais funcionais e imersivas, unindo design elegante, boa
+            usabilidade e desempenho sólido. Tenho perfil focado e organizado,
+            com facilidade para aprender novas linguagens, tecnologias e
+            explorar diferentes abordagens no uso de ferramentas que já domino.
+            Busco constantemente evoluir como desenvolvedor, priorizando
+            qualidade de código, escalabilidade e boas práticas, sempre atento
+            às tendências e às necessidades reais do usuário.
           </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className={styles.ctaButtons}
+          >
+            <a href="#projects" className={styles.primaryBtn}>
+              Ver Projetos
+            </a>
+            <a href="#skills" className={styles.primaryBtn}>
+              Minhas Skills
+            </a>
+            <a href="#contact" className={styles.primaryBtn}>
+              Entrar em Contato
+            </a>
+          </motion.div>
         </div>
 
         <motion.div
@@ -98,10 +121,7 @@ const Hero = () => {
                 transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
               }}
             >
-              <img
-                src="https://picsum.photos/seed/fullstack/800/800"
-                alt="Profile"
-              />
+              <img src={fotoPerfil} alt="Profile" />
             </div>
           </div>
         </motion.div>

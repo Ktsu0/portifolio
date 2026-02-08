@@ -20,6 +20,7 @@ import {
   SiJavascript,
   SiThreedotjs,
   SiVite,
+  SiMongodb,
 } from "react-icons/si";
 import { TbApi } from "react-icons/tb";
 import styles from "./Skills.module.scss";
@@ -50,6 +51,7 @@ const skillCategories = [
       { name: "Node.js", icon: <SiNodedotjs color="#339933" /> },
       { name: "NestJS", icon: <SiNestjs color="#E0234E" /> },
       { name: "SQL", icon: <SiPostgresql color="#336791" /> },
+      { name: "NoSQL", icon: <SiMongodb color="#47A248" /> },
       { name: "API REST", icon: <TbApi /> },
       { name: "Python", icon: <SiPython color="#3776AB" /> },
     ],

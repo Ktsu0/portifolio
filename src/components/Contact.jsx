@@ -7,7 +7,7 @@ import {
   FaDiscord,
   FaRegPaperPlane,
   FaGoogle,
-} from "react-icons/fa"; // Adicionei o ícone do Google se quiser ser mais específico
+} from "react-icons/fa";
 import styles from "./Contact.module.scss";
 
 const Contact = () => {
@@ -21,7 +21,7 @@ const Contact = () => {
   const contactOptions = [
     { id: "whatsapp", label: "WhatsApp", icon: <FaWhatsapp /> },
     { id: "instagram", label: "Instagram", icon: <FaInstagram /> },
-    { id: "email", label: "Gmail / Email", icon: <FaEnvelope /> }, // Rótulo genérico
+    { id: "email", label: "Gmail / Email", icon: <FaEnvelope /> },
     { id: "discord", label: "Discord", icon: <FaDiscord /> },
   ];
 
@@ -166,6 +166,8 @@ const Contact = () => {
                   aria-label="Fechar"
                 >
                   <svg
+                    width="32"
+                    height="32"
                     viewBox="0 0 24 24"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
