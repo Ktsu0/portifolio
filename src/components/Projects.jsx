@@ -93,6 +93,23 @@ const projects = [
     github: "https://github.com/Ktsu0/API_Nest",
     external: "https://api-nest-iota.vercel.app/",
   },
+  {
+    title: "Antes de Dormir",
+    image: "./../assets/antesDormir.png",
+    description:
+      "Aplicação web voltada à criação e consumo de relatos anônimos e aleatórios, projetada para oferecer uma experiência simples, envolvente e segura. O projeto integra frontend e backend através da API do Supabase, utilizando autenticação via Google para gerenciamento de usuários e controle de acesso. A arquitetura prioriza organização, clareza de responsabilidades e escalabilidade, com foco em boas práticas, desempenho e facilidade de manutenção. O sistema permite criação de relatos, categorização, interação do usuário e consumo dinâmico de conteúdo, atuando como uma base sólida para evolução futura da plataforma.",
+    tech: [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "Supabase REST API",
+      "Authentication (Google OAuth)",
+      "Relational Database (PostgreSQL via Supabase)",
+      "Environment Variables (.env)",
+    ],
+    github: "https://github.com/Ktsu0/antes-de-dormir",
+    external: "https://antes-de-dormir-ktsu.vercel.app/",
+  },
 ];
 
 const Projects = () => {
