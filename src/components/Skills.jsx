@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCode, FaServer, FaPaintBrush, FaChevronDown } from "react-icons/fa";
+import { FaCode, FaServer, FaPaintBrush, FaChevronDown, FaRobot } from "react-icons/fa";
 import {
   SiHtml5,
   SiCss3,
@@ -20,7 +20,14 @@ import {
   SiJavascript,
   SiThreedotjs,
   SiVite,
+  SiVitest,
   SiMongodb,
+  SiNextdotjs,
+  SiExpo,
+  SiPrisma,
+  SiSupabase,
+  SiGooglegemini,
+  SiTelegram,
 } from "react-icons/si";
 import { TbApi } from "react-icons/tb";
 import styles from "./Skills.module.scss";
@@ -40,6 +47,8 @@ const skillCategories = [
       { name: "Tailwind CSS", icon: <SiTailwindcss color="#06B6D4" /> },
       { name: "Module SCSS", icon: <SiSass color="#CC6699" /> },
       { name: "Three.js", icon: <SiThreedotjs color="#FFFFFF" /> },
+      { name: "Next.js", icon: <SiNextdotjs color="#FFFFFF" /> },
+      { name: "Expo", icon: <SiExpo color="#FFFFFF" /> },
     ],
   },
   {
@@ -54,6 +63,19 @@ const skillCategories = [
       { name: "NoSQL", icon: <SiMongodb color="#47A248" /> },
       { name: "API REST", icon: <TbApi /> },
       { name: "Python", icon: <SiPython color="#3776AB" /> },
+      { name: "Prisma", icon: <SiPrisma color="#FFFFFF" /> },
+      { name: "Supabase", icon: <SiSupabase color="#3ECF8E" /> },
+    ],
+  },
+  {
+    id: "automation",
+    title: "Automação & IA",
+    subtitle: "Orquestração, bots e integrações com IA",
+    icon: <FaRobot />,
+    skills: [
+      { name: "ActivePieces", icon: <FaRobot color="#6C47FF" /> },
+      { name: "Google Gemini API", icon: <SiGooglegemini color="#8E75B2" /> },
+      { name: "Telegram Bot API", icon: <SiTelegram color="#26A5E4" /> },
     ],
   },
   {
@@ -76,6 +98,7 @@ const skillCategories = [
       { name: "Git", icon: <SiGit color="#F05032" /> },
       { name: "GitHub", icon: <SiGithub color="#ffffff" /> },
       { name: "Vite", icon: <SiVite color="#646CFF" /> },
+      { name: "Vitest", icon: <SiVitest color="#6E9F18" /> },
     ],
   },
 ];
