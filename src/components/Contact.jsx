@@ -9,12 +9,15 @@ import {
   FaGoogle,
 } from "react-icons/fa";
 import styles from "./Contact.module.scss";
+import { useModalA11y } from "../hooks/useModalA11y";
 
 const Contact = () => {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState("whatsapp");
+
+  useModalA11y(showModal, () => setShowModal(false));
 
   const MY_EMAIL = "gabrielwag971@gmail.com";
 
@@ -53,7 +56,7 @@ const Contact = () => {
     let targetUrl = "";
 
     switch (selectedOption) {
-      case "email":
+      case "email": {
         const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${MY_EMAIL}&su=${subject}&body=${encodedBody}`;
         const mailtoUrl = `mailto:${MY_EMAIL}?subject=${subject}&body=${encodedBody}`;
 
@@ -65,11 +68,13 @@ const Contact = () => {
           targetUrl = gmailUrl;
         }
         break;
+      }
 
-      case "whatsapp":
+      case "whatsapp": {
         const whatsMsg = encodeURIComponent(`Olá, sou ${name}. ${message}`);
         targetUrl = `https://wa.me/5546991213122?text=${whatsMsg}`;
         break;
+      }
 
       case "instagram":
         targetUrl = "https://instagram.com/gabr1el_wag";
@@ -159,6 +164,9 @@ const Contact = () => {
                 exit={{ scale: 0.9, opacity: 0 }}
                 className={styles.modalContent}
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="contact-modal-title"
               >
                 <button
                   className={styles.closeButton}
@@ -182,7 +190,9 @@ const Contact = () => {
                   </svg>
                 </button>
 
-                <h3 className={styles.modalTitle}>Escolha o canal</h3>
+                <h3 id="contact-modal-title" className={styles.modalTitle}>
+                  Escolha o canal
+                </h3>
                 <p className={styles.modalDescription}>
                   Por onde enviamos essa mensagem?
                 </p>

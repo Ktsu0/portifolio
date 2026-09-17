@@ -1,4 +1,6 @@
 import React from 'react';
+import { MotionConfig } from 'framer-motion';
+import AmbientBackground from './components/AmbientBackground';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Skills from './components/Skills';
@@ -10,15 +12,18 @@ import './App.css';
 
 function App() {
   return (
-    <div className="app-container">
-      <Navbar />
-      <Hero />
-      <Skills />
-      <Projects />
-      <Contact />
-      <Footer />
-      <WhatsAppButton />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <AmbientBackground />
+      <div className="app-container">
+        <Navbar />
+        <Hero />
+        <Skills />
+        <Projects />
+        <Contact />
+        <Footer />
+        <WhatsAppButton />
+      </div>
+    </MotionConfig>
   );
 }
 

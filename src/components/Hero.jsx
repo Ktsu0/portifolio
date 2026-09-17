@@ -1,27 +1,39 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 import styles from "./Hero.module.scss";
-import fotoPerfil from "./../assets/fotoPerfil.png";
+import heroCutout from "./../assets/imgPerfil.png";
+import ShatterPortrait from "./shatter/ShatterPortrait";
+
+const MAX_OFFSET_X = 22;
+const MAX_OFFSET_Y = 14;
 
 const Hero = () => {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const shouldReduceMotion = useReducedMotion();
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+  const rawX = useMotionValue(0);
+  const rawY = useMotionValue(0);
+  const floatX = useSpring(rawX, { type: "spring", duration: 0.7, bounce: 0.15 });
+  const floatY = useSpring(rawY, { type: "spring", duration: 0.7, bounce: 0.15 });
 
-    const tiltX = ((y - centerY) / centerY) * -10;
-    const tiltY = ((x - centerX) / centerX) * 10;
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    setTilt({ x: tiltX, y: tiltY });
-  };
+    const handlePointerMove = (e) => {
+      const offsetX = (e.clientX / window.innerWidth - 0.5) * 2;
+      const offsetY = (e.clientY / window.innerHeight - 0.5) * 2;
+      rawX.set(offsetX * MAX_OFFSET_X);
+      rawY.set(offsetY * MAX_OFFSET_Y);
+    };
 
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
+    window.addEventListener("pointermove", handlePointerMove);
+    return () => window.removeEventListener("pointermove", handlePointerMove);
+  }, [shouldReduceMotion, rawX, rawY]);
 
   return (
     <section id="home" className={styles.heroSection}>
@@ -100,29 +112,14 @@ const Hero = () => {
             &gt;
           </div>
 
-          <div
-            className={styles.ringContainer}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div className={styles.gradientRing}></div>
-
-            <div className={styles.innerGlow}></div>
-
-            <div className={styles.particlesContainer}>
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className={styles.particle}></div>
-              ))}
-            </div>
-
-            <div
-              className={styles.profileImage}
-              style={{
-                transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-              }}
+          <div className={styles.floatStage}>
+            <div className={styles.glowOrb}></div>
+            <motion.div
+              className={styles.portraitStage}
+              style={{ x: floatX, y: floatY }}
             >
-              <img src={fotoPerfil} alt="Profile" />
-            </div>
+              <ShatterPortrait photoUrl={heroCutout} label="Gabriel Wagner" />
+            </motion.div>
           </div>
         </motion.div>
       </div>

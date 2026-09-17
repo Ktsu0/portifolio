@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaGithub, FaExternalLinkAlt, FaTimes } from "react-icons/fa";
 import styles from "./Projects.module.scss";
+import { useModalA11y } from "../hooks/useModalA11y";
 import financeiroCover from "./../assets/covers/financeiro.jpg";
 import termoInfinitoCover from "./../assets/covers/termoInfinito.jpg";
 import mysticCover from "./../assets/covers/mystic.jpg";
@@ -219,6 +220,9 @@ const Projects = () => {
     }
   };
 
+  useModalA11y(!!selectedProject, handleDetailsClose);
+  useModalA11y(showModal, handleModalClose);
+
   return (
     <section id="projects" className={`section ${styles.projectsSection}`}>
       <div className="container">
@@ -248,6 +252,8 @@ const Projects = () => {
                     src={project.image}
                     alt={project.title}
                     className={styles.projectImage}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -308,12 +314,16 @@ const Projects = () => {
                 transition={{ duration: 0.3, type: "spring" }}
                 className={`${styles.modalContent} ${styles.detailsModal}`}
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="project-details-title"
               >
                 <div className={styles.modalImageWrapper}>
                   <img
                     src={selectedProject.image}
                     alt={selectedProject.title}
                     className={styles.modalFullImage}
+                    loading="lazy"
                   />
                   <div className={styles.imageGradient}></div>
                   <button
@@ -340,7 +350,7 @@ const Projects = () => {
                 </div>
 
                 <div className={styles.detailsContentWrapper}>
-                  <h3 className={styles.detailsTitle}>
+                  <h3 id="project-details-title" className={styles.detailsTitle}>
                     {selectedProject.title}
                   </h3>
 
@@ -411,6 +421,9 @@ const Projects = () => {
                 transition={{ duration: 0.3, type: "spring" }}
                 className={styles.modalContent}
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="launch-modal-title"
               >
                 <button
                   className={styles.closeButton}
@@ -458,7 +471,7 @@ const Projects = () => {
                   </svg>
                 </div>
 
-                <h3 className={styles.modalTitle}>
+                <h3 id="launch-modal-title" className={styles.modalTitle}>
                   Projeto aguardando lançamento
                 </h3>
 

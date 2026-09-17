@@ -3,11 +3,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { IoMenu, IoClose } from "react-icons/io5";
 import TypingEffect from "./TypingEffect";
+import { useModalA11y } from "../hooks/useModalA11y";
 import styles from "./Navbar.module.scss";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  useModalA11y(isMobile && isOpen, () => setIsOpen(false));
 
   useEffect(() => {
     const checkSize = () => {
@@ -63,7 +66,7 @@ const Navbar = () => {
                 <FaGithub />
               </a>
               <a
-                href="https://linkedin.com/in/gabriel-wagner-00baaa381 "
+                href="https://linkedin.com/in/gabriel-wagner-00baaa381"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -71,7 +74,13 @@ const Navbar = () => {
               </a>
             </>
           ) : (
-            <button onClick={toggleMenu} className={styles.mobileToggle}>
+            <button
+              onClick={toggleMenu}
+              className={styles.mobileToggle}
+              aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
+            >
               {isOpen ? <IoClose /> : <IoMenu />}
             </button>
           )}
@@ -81,6 +90,7 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobile && isOpen && (
           <motion.div
+            id="mobile-menu"
             className={styles.mobileMenuOverlay}
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}

@@ -135,6 +135,8 @@ const Skills = () => {
                 className={`${styles.categoryButton} ${
                   activeCategory === category.id ? styles.active : ""
                 }`}
+                aria-expanded={activeCategory === category.id}
+                aria-controls={`skills-panel-${category.id}`}
               >
                 <div className={styles.categoryHeader}>
                   <div
@@ -167,6 +169,9 @@ const Skills = () => {
               <AnimatePresence>
                 {activeCategory === category.id && (
                   <motion.div
+                    id={`skills-panel-${category.id}`}
+                    role="region"
+                    aria-label={category.title}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
